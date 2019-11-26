@@ -35,9 +35,9 @@ pcl::visualization::PCLVisualizer::Ptr Vis::addCloud(pcl::visualization::PCLVisu
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::addTf(pcl::visualization::PCLVisualizer::Ptr viewer, tf_struct_data data)
 {
-    viewer->addLine (data.center, data.x_axis, 1.0f, 0.0f, 0.0f, ("major eigen vector " + std::to_string(tf_count)));
-    viewer->addLine (data.center, data.y_axis, 0.0f, 1.0f, 0.0f, ("middle eigen vector" + std::to_string(tf_count)));
-    viewer->addLine (data.center, data.z_axis, 0.0f, 0.0f, 1.0f, ("minor eigen vector" + std::to_string(tf_count)));
+    viewer->addLine (data.center, data.x_axis, 1.0f, 0.0f, 0.0f, ("major eigen vector " + std::to_string(tf_count))); //color red
+    viewer->addLine (data.center, data.y_axis, 0.0f, 1.0f, 0.0f, ("middle eigen vector" + std::to_string(tf_count))); //color green
+    viewer->addLine (data.center, data.z_axis, 0.0f, 0.0f, 1.0f, ("minor eigen vector" + std::to_string(tf_count))); //color blue
     tf_count ++;
     return(viewer);
 }

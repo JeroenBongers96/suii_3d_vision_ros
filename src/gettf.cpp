@@ -122,7 +122,7 @@ tf_br_data Gettf::transform_data(tf_struct_data center_result)
     }
     else if ((center_result.x_axis.y - center_result.center.y) < 0 && (center_result.x_axis.x - center_result.center.x) > 0)
     {
-        yaw = yaw + PI;
+        yaw = yaw + (2*PI);
     }
 
     double pitch = 0.0;

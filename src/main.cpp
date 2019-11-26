@@ -18,6 +18,7 @@ int main(int argc, char** argv){
 
     ros::init(argc, argv,"vision_tf_broadcaster");
     ros::NodeHandle node;
+    ros::Rate loop_rate(10);
 
     start = clock();
     if (time_debug){
@@ -75,30 +76,47 @@ int main(int argc, char** argv){
 
     vector<tf_br_data> center_list = gettf.build_view(debug);
 
-    for(int i = 0; i < center_list.size(); i++)
-        {
-            static tf::TransformBroadcaster br;
-            geometry_msgs::TransformStamped transformStamped;
-            transformStamped.header.stamp = ros::Time::now();
-            transformStamped.header.frame_id = "world";
-            transformStamped.child_frame_id = center_list[i].name;
-            transformStamped.transform.translation.x = center_list[i].pos_x;
-            transformStamped.transform.translation.y = center_list[i].pos_y;
-            transformStamped.transform.translation.z = center_list[i].pos_z;
-            transformStamped.transform.rotation.x = center_list[i].quat_x;
-            transformStamped.transform.rotation.y = center_list[i].quat_y;
-            transformStamped.transform.rotation.z = center_list[i].quat_z;
-            transformStamped.transform.rotation.w = center_list[i].quat_w;
-            br.sendTransform(transformStamped);
-            if(debug)
-            {
-                cout << "published " << center_list[i].name << endl;
-            }
-        }
+    int count = 0;
     
+    while(ros::ok())
+    {
+        for(int i = 0; i < center_list.size(); i++)
+            {
+                static tf::TransformBroadcaster br;
+                geometry_msgs::TransformStamped transformStamped;
+                transformStamped.header.stamp = ros::Time::now();
+                transformStamped.header.frame_id = "camera";
+                transformStamped.child_frame_id = center_list[i].name;
+                transformStamped.transform.translation.x = center_list[i].pos_x;
+                transformStamped.transform.translation.y = center_list[i].pos_y;
+                transformStamped.transform.translation.z = center_list[i].pos_z;
+                transformStamped.transform.rotation.x = center_list[i].quat_x;
+                transformStamped.transform.rotation.y = center_list[i].quat_y;
+                transformStamped.transform.rotation.z = center_list[i].quat_z;
+                transformStamped.transform.rotation.w = center_list[i].quat_w;
+                br.sendTransform(transformStamped);
+                if(debug)
+                {
+                    cout << "published " << center_list[i].name << endl;
+                }
+            }
+        loop_rate.sleep();
+        count++;
+        if (count >= 10)
+        {
+            break;
+        }
 
-    if (debug){
-        gettf.show_viewer();
+    }
+
+    if(debug)
+    {
+        //use this while loop to stop viewer with ^c
+        while(ros::ok())
+        {
+            gettf.show_viewer();
+            loop_rate.sleep();
+        }
     }
 
     gettf.reset_view();  
