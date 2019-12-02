@@ -1,5 +1,6 @@
 #include "gettf.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -17,8 +18,6 @@ Gettf::Gettf(bool debug)
 
 void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_name)
 {
-    //Get PCD from Pipeline.cpp
-    cloud = pipe.getCloud(cloud_name);
     //Filter cloud
     cloud = filter.pt_Filter(cloud);
     cloud = filter.d_Filter(cloud);
@@ -78,7 +77,7 @@ vector<tf_br_data> Gettf::build_view(bool debug)
             cout << "pos_y: " << center_list[i].pos_y << endl;
             cout << "pos_z: " << center_list[i].pos_z << endl;
             cout << "quat_z: " << center_list[i].quat_z << endl;
-            cout << "quat_w: " << center_list[i].quat_w << endl;
+            cout << "quat_w: " << center_list[i].quat_w << endl;            
         }
     }
     return (center_list);
@@ -111,19 +110,41 @@ tf_br_data Gettf::transform_data(tf_struct_data center_result)
     tf_br.pos_y = center_result.center.y;
     tf_br.pos_z = center_result.center.z;
     
-    double yaw = atan2((center_result.x_axis.y - center_result.center.y),(center_result.x_axis.x - center_result.center.x));
+
+    //first was atan2
+    //double yaw = atan2((center_result.x_axis.y - center_result.center.y),(center_result.x_axis.x - center_result.center.x));
+    double yaw = atan((center_result.x_axis.y - center_result.center.y)/(center_result.x_axis.x - center_result.center.x));
     if ((center_result.x_axis.y - center_result.center.y) > 0 && (center_result.x_axis.x - center_result.center.x) < 0)
     {
-        yaw = yaw + PI;
+        //Angle relative to positive x-axis is 180 - angle (angle is negative so we need to add it to 180)
+        yaw = PI + yaw;
     }
     else if ((center_result.x_axis.y - center_result.center.y) < 0 && (center_result.x_axis.x - center_result.center.x) < 0)
     {
+        //Angle relative to positive x-axis is 180 + angle
         yaw = yaw + PI;
     }
     else if ((center_result.x_axis.y - center_result.center.y) < 0 && (center_result.x_axis.x - center_result.center.x) > 0)
     {
-        yaw = yaw + PI;
+        //Angle relative to positive x-axis is 360 - angle (angle is negative so we need to add it to 360)
+        yaw = 2*PI + yaw;
     }
+
+    //Write data in .csv file (Name, Pos_x, Pos_y, Pos_z, Angle (º))
+    if(center_result.name == "object")
+    {
+        string filename = "test.csv";
+        fstream fin;
+        fin.open(filename, ios::out | ios::app);
+        fin.seekg(ios_base::end);
+        fin << center_result.name << ", " << 
+        center_result.center.x<< ", " << 
+        center_result.center.y << ", " <<
+        center_result.center.z << ", " <<
+        yaw*180/PI << "\n";
+        fin.close();  
+    }
+
 
     double pitch = 0.0;
     double roll = 0.0;
@@ -141,5 +162,3 @@ tf_br_data Gettf::transform_data(tf_struct_data center_result)
 
     return tf_br;
 }
-
-

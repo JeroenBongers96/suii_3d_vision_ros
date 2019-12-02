@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include "pipeline.h"
 #include "filter.h"
 #include "segmentation.h"
 #include "tf.h"
@@ -25,7 +24,6 @@ class Gettf
         obj_struct objects_struct;
         vector<tf_br_data> center_list;
         //Creating objects of classes
-        Pipeline pipe;
         Filter filter;
         Segmentation segment;
         Transformation transform;
