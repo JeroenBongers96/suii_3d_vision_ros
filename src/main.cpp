@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
-#include <geometry_msgs_TransformStamped.h>
+#include <geometry_msgs/TransformStamped.h>
 #include "tf_struct.h"
 #include "gettf.h"
 #include "getImages.h"
