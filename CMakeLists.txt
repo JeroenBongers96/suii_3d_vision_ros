@@ -12,11 +12,16 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  sensor_msgs
+  message_generation
+  image_transport
+  cv_bridge
 )
 
 find_package(PCL 1.2 REQUIRED)
 find_package(realsense2 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(cloud_viewer)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -59,11 +64,10 @@ find_package(OpenCV REQUIRED)
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+   FILES
+   GetRoi.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -73,10 +77,12 @@ find_package(OpenCV REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+   sensor_msgs
+   #DEPENDENCIES sensor_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,9 +114,9 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES suii_3d_vision_ros
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  INCLUDE_DIRS include
+#  LIBRARIES ros_cv_img
+  CATKIN_DEPENDS roscpp rospy message_runtime sensor_msgs cv_bridge image_transport 
 #  DEPENDS system_lib
 )
 
@@ -219,3 +225,8 @@ target_link_libraries(main ${OpenCV_LIBS})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(yolo_test_server src/yolo_server.cpp)
+target_link_libraries(yolo_test_server ${catkin_LIBRARIES})
+target_link_libraries(yolo_test_server ${OpenCV_LIBS} )
+add_dependencies(yolo_test_server yolo_server_gencpp)
