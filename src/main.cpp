@@ -7,6 +7,7 @@
 #include "getImages.h"
 
 using namespace std;
+using namespace cv;
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
 int main(int argc, char** argv){
@@ -37,7 +38,9 @@ int main(int argc, char** argv){
     Gettf gettf(debug);
     GetImages getimage;
     img_struct images = getimage.GetPic();
+    Mat color = images.Image; 
     cloud = images.Cloud;
+    getimage.GetRoi(argc, argv, color, debug);
     gettf.send_pcd(cloud, file_name);
 
     if (time_debug){
