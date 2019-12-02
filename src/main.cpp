@@ -1,16 +1,16 @@
 #include <iostream>
 #include <ros/ros.h>
-//#include <tf2_ros/transform_broadcaster.h>
 #include <tf/transform_broadcaster.h>
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs_TransformStamped.h>
 #include "tf_struct.h"
 #include "gettf.h"
+#include "getImages.h"
 
 using namespace std;
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
 int main(int argc, char** argv){
-    string file_name = "test_file";
+    string file_name = "";
     clock_t start;
     double duration;
     bool time_debug = false;
@@ -26,6 +26,8 @@ int main(int argc, char** argv){
         std::cout<<"starting time: "<< duration <<'\n';
     }
     
+    file_name = "obj";
+    
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"loading pcd from pc: "<< duration <<'\n';
@@ -33,6 +35,9 @@ int main(int argc, char** argv){
 
     //get PCD
     Gettf gettf(debug);
+    GetImages getimage;
+    img_struct images = getimage.GetPic();
+    cloud = images.Cloud;
     gettf.send_pcd(cloud, file_name);
 
     if (time_debug){
@@ -120,8 +125,6 @@ int main(int argc, char** argv){
     }
 
     gettf.reset_view();  
-
+    
     return(0);
 }
-
-

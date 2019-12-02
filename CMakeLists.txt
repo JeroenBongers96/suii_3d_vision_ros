@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(PCL 1.2 REQUIRED)
+find_package(realsense2 REQUIRED)
+find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -122,12 +124,17 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable (main src/main.cpp src/gettf.cpp src/pipeline.cpp src/filter.cpp src/segmentation.cpp src/tf.cpp src/vis.cpp)
-target_link_libraries (main ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+add_executable (main src/main.cpp src/gettf.cpp src/pipeline.cpp src/filter.cpp src/segmentation.cpp src/tf.cpp src/vis.cpp src/getImages.cpp)
+
+target_link_libraries(main ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(main ${realsense2_LIBRARY})
+target_link_libraries(main ${OpenCV_LIBS})
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/suii_3d_vision_ros.cpp
