@@ -226,7 +226,13 @@ target_link_libraries(main ${OpenCV_LIBS})
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+
 #add_executable(yolo_main_server yolo/yolo_server.py)
 #target_link_libraries(yolo_main_server ${catkin_LIBRARIES})
 #target_link_libraries(yolo_main_server ${OpenCV_LIBS} )
 #add_dependencies(yolo_main_server yolo_server_gencpp)
+
+add_executable(yolo_test_server src/yolo_server.cpp)
+target_link_libraries(yolo_test_server ${catkin_LIBRARIES})
+target_link_libraries(yolo_test_server ${OpenCV_LIBS} )
+add_dependencies(yolo_test_server yolo_server_gencpp)
