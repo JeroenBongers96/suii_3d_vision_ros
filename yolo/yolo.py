@@ -7,9 +7,9 @@ from utils.datasets import *
 from utils.utils import *
 
 defaults_dict = {
-    "cfg": "/home/mark/catkin_ws/yolo_config/full_yolo.cfg", # Config file path
-    "data": "/home/mark/catkin_ws/yolo_config/full_yolo.data", # Data file path
-    "weights": "/home/mark/catkin_ws/yolo_config/full_yolo.backup", # Weights file path
+    "cfg": "/home/jeroen/catkin_ws/src/config/full_yolo.cfg", # Config file path
+    "data": "/home/jeroen/catkin_ws/src/config/full_yolo.data", # Data file path
+    "weights": "/home/jeroen/catkin_ws/src/config/full_yolo.backup", # Weights file path
     "conf_thres": 0.6, # Confidence threshold (accuracy)
     "nms_thres": 0.5,  # Non-maximum supression threshold (compression, lower value = more compression)
     "size": 416 # DO NOT CHANGE!!!
@@ -65,7 +65,8 @@ class Yolo(object):
                 # Add bbox to the image
                 label = '%s %.2f' % (self._classes[int(cls)], conf)
                 roi = (int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3]))
-                rt.append((self._classes[int(cls)], roi))
+                #rt.append((self._classes[int(cls)], roi))
+                rt.append((int(cls),roi[0],roi[1],roi[2],roi[3]))
 
                 # Print results to screen
                 if debug:
@@ -74,7 +75,7 @@ class Yolo(object):
         if debug:
             print('Done. (%.3fs)' % (time.time() - t))
             cv2.imshow("capture frame", img_org)
-            cv2.waitKey(16)
+            cv2.waitKey()
 
         return rt
 

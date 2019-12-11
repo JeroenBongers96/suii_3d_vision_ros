@@ -45,6 +45,10 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
     }
     else{
         //Add pt_filter from ROI
+        //pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud;
+        //temp_cloud = filter.cut_Filter(objects_struct.object);
+        //temp_cloud = segment.getObjectSeg(temp_cloud); //check if necesarry
+        //tf_struct_data objec_tf = transtransform.getTf(temp_cloud);
         objects_struct.object = segment.getObjectSeg(objects_struct.object);
         tf_struct_data object_tf = transform.getTf(objects_struct.object);
         center.name = name;

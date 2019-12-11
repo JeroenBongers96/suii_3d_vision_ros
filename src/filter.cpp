@@ -32,3 +32,22 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::d_Filter(pcl::PointCloud<pcl::PointX
     vg.filter (*cloud_filtered);
     return cloud_filtered;
 }
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int xmin, int xmax, int ymin, int ymax)
+{
+    int i = 0;
+    for(int y = 0; y < 480; ++y)
+    {
+        for(int x = 0; x < 640; ++x)
+        {
+            if(x <= xmin | x >= xmax | y <= ymin | y >= ymax)
+            {
+                cloud->points[i].x = 0;
+                cloud->points[i].y = 0;
+                cloud->points[i].z = 0;
+            }
+            ++i;
+        }
+    }
+	return cloud;
+}
