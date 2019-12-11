@@ -22,7 +22,7 @@ class GetImages
     public:
         GetImages();
         img_struct GetPic(void);
-        void GetRoi(int argc, char **argv, Mat img, bool debug);
+        vector<int> GetRoi(int argc, char **argv, Mat img, bool debug);
 };
 
 #endif

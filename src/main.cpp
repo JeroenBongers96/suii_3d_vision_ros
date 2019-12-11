@@ -14,6 +14,7 @@ int main(int argc, char** argv){
     string file_name = "";
     clock_t start;
     double duration;
+    vector<int> roi_vect;
     bool time_debug = false;
     bool debug = false;
 
@@ -40,7 +41,8 @@ int main(int argc, char** argv){
     img_struct images = getimage.GetPic();
     Mat color = images.Image; 
     cloud = images.Cloud;
-    getimage.GetRoi(argc, argv, color, debug);
+    roi_vect = getimage.GetRoi(argc, argv, color, debug);
+
     gettf.send_pcd(cloud, file_name);
 
     if (time_debug){
@@ -54,12 +56,6 @@ int main(int argc, char** argv){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"DURATION OF SENDING A PCD FROM FILE TO FILE : "<< duration <<'\n';
     }
-
-    //get TFs of object and table and visualise 
-    vector<int> roi;
-    for(int i = 1; i <= 4; i++){
-        roi.push_back(i);
-    }
     
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -67,7 +63,7 @@ int main(int argc, char** argv){
     }
 
     string name = "table";
-    gettf.build_center(name, roi, debug);
+    gettf.build_center(name, roi_vect, debug);
 
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -75,7 +71,26 @@ int main(int argc, char** argv){
     }
 
     name = "object";
-    gettf.build_center(name, roi, debug);
+    gettf.build_center(name, roi_vect, debug);
+    /*
+    //IMPLEMENT ROI
+    int nr_of_objs = roi_vect.size() / 5;
+    int count = 0;
+    for(int x = 0, x < nr_of_objs, x++)
+    {   
+        int id = roi_vect[count];
+        name = "object"; // link from id
+        vector<int> obj_roi;
+        for(int y = 1; y <= 4; y++)
+        {
+            count++;
+            obj_roi = roi_vect[count];
+        }
+        count++;        
+        gettf.build_center(name, roi_vect, debug);
+    }
+    count = 0;
+    */
 
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;

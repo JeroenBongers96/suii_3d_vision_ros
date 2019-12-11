@@ -46,14 +46,18 @@ class Yolo_Wrapper(object):
 
         # Do no touch, client encoded request
         resp = self.client.networkCall(0x00, {"img": jpg_enc})
-
         #End client encoded request
-        print(resp)
+
         list_of_name = resp['names']
-        #print results
+        arr_list = []
+        for x in list_of_name:
+            #add start int
+            for y in x:
+                #add data
+                arr_list.append(y)                
 
         # convert to np array
-        return GetRoiResponse({1,2,3})
+        return GetRoiResponse(arr_list)
 
 if __name__ == "__main__":
     wrapper = Yolo_Wrapper()
