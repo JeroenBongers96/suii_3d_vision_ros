@@ -14,8 +14,8 @@
 class Filter
 {
     private:
-        // Define min and max for X, Y and Z
-        float minX = -0.2, minY = -0.2, minZ = -2.5;
+        // Define min and max for X, Y and Z. Z is always positive so minZ is > 0 to filter 0 points out of the PCD.
+        float minX = -0.2, minY = -0.2, minZ = +0.1;
         float maxX = +0.2, maxY = +0.2, maxZ = +2.5;  
         rs2::points points;
 
