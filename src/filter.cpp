@@ -12,13 +12,13 @@ Filter::Filter(void)
 pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::pt_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     //Filter out the outer points which disturb the PCD
-    pcl::PointCloud<pcl::PointXYZ>::Ptr bodyFiltered (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
     pcl::CropBox<pcl::PointXYZ> boxFilter;
     boxFilter.setMin(Eigen::Vector4f(minX, minY, minZ, 1.0));
     boxFilter.setMax(Eigen::Vector4f(maxX, maxY, maxZ, 1.0));
     boxFilter.setInputCloud(cloud);
-    boxFilter.filter(*bodyFiltered);
-    return bodyFiltered;
+    boxFilter.filter(*cloud_filtered);
+    return cloud_filtered;
 }
 
 // visualisation member function
@@ -50,4 +50,15 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter(pcl::PointCloud<pcl::Poin
         }
     }
 	return cloud;
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh)
+{
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
+    sor.setInputCloud (cloud);
+    sor.setMeanK (meanK);
+    sor.setStddevMulThresh (mulThresh);
+    sor.filter (*cloud_filtered);
+    return cloud_filtered;
 }
