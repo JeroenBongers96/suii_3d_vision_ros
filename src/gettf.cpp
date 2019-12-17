@@ -16,6 +16,14 @@ Gettf::Gettf(bool debug)
     }
 }
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    temp_cloud = filter.cut_Filter(cloud, roi[0], roi[2], roi[1], roi[3]);
+    return(temp_cloud);
+
+}
+
 void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_name)
 {
     //Filter cloud
@@ -26,7 +34,7 @@ void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_nam
 }
 
 //getTf member function
-void Gettf::build_center(string name, vector<int> roi, bool debug)
+void Gettf::build_center(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string name, vector<int> roi, bool debug)
 {
     tf_struct_data center;
     //Need to implement ROI for specific objects and include pt_Filter cut the objects out
@@ -55,12 +63,12 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         center.center = object_tf.center;
         center.x_axis = object_tf.x_axis;
         center.y_axis = object_tf.y_axis;
-        center.z_axis = object_tf.z_axis;
+        center.z_axis = object_tf.z_axis;*/
         if (debug)
         {
-            viewer = vis.addCloud(viewer, objects_struct.object);
-            viewer = vis.addTf(viewer, object_tf);
-        }*/
+            viewer = vis.addCloud(viewer, cloud);
+            //viewer = vis.addTf(viewer, object_tf);
+        }
     }
     
     tf_br_data tf_br = transform_data(center);

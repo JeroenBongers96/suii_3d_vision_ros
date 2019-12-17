@@ -16,7 +16,8 @@ int main(int argc, char** argv){
     double duration;
     vector<int> roi_vect;
     bool time_debug = false;
-    bool debug = false;
+    bool debug = true;
+    string name = "";
 
     ros::init(argc, argv,"vision_tf_broadcaster");
     ros::NodeHandle node;
@@ -43,6 +44,37 @@ int main(int argc, char** argv){
     cloud = images.Cloud;
     roi_vect = getimage.GetRoi(argc, argv, color, debug);
 
+    //CUT FILTER FOR EVERY OBJECT
+    pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    
+    //IMPLEMENT ROI
+    int nr_of_objs = roi_vect.size() / 5;
+    std::cout<< nr_of_objs << endl;
+    int counter = 0;
+    vector<int> obj_roi;
+    obj_roi.clear();
+    
+    if(nr_of_objs > 0)
+    {
+        for(int x = 0; x < nr_of_objs; x++)
+        {   
+            counter = x*5;
+            name = std::to_string(roi_vect[counter]); // link from id
+            std::cout << "Counter: " << counter << endl;
+            std::cout << "Name: " << name << endl;
+            for(int y = 0; y <= 3; y++)
+            {
+                counter++;
+                obj_roi.push_back(roi_vect[counter]);
+                std::cout << "roi_vect: " << roi_vect[counter] << endl;
+                std::cout << "obj_roi: " << obj_roi[y] << endl;
+            }      
+            test_cloud = gettf.cutting_objects(cloud, obj_roi, debug);
+            gettf.build_center(test_cloud ,name, roi_vect, debug);
+            break;
+        } 
+    }
+
     gettf.send_pcd(cloud, file_name);
 
     if (time_debug){
@@ -62,8 +94,8 @@ int main(int argc, char** argv){
         std::cout<<"start build table : "<< duration <<'\n';
     }
 
-    string name = "table";
-    gettf.build_center(name, roi_vect, debug);
+    //name = "table";
+    //gettf.build_center(name, roi_vect, debug);
 
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -73,6 +105,7 @@ int main(int argc, char** argv){
     //name = "object";
     //gettf.build_center(name, roi_vect, debug);
     
+    /*
     //IMPLEMENT ROI
     int nr_of_objs = roi_vect.size() / 5;
     std::cout<< nr_of_objs << endl;
@@ -97,7 +130,8 @@ int main(int argc, char** argv){
             }      
             gettf.build_center(name, obj_roi, debug);
         } 
-    }
+    }*/
+
     
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;

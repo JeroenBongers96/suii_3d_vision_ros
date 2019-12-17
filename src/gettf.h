@@ -32,8 +32,9 @@ class Gettf
 
     public:
         Gettf(bool);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr, vector<int>, bool);
         void send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr, string);
-        void build_center(string, vector<int>, bool);
+        void build_center(pcl::PointCloud<pcl::PointXYZ>::Ptr, string, vector<int>, bool);
         vector<tf_br_data> build_view(bool);
         void show_viewer(void);
         bool reset_view(void);
