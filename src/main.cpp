@@ -70,28 +70,35 @@ int main(int argc, char** argv){
         std::cout<<"end buil table: "<< duration <<'\n';
     }
 
-    name = "object";
-    gettf.build_center(name, roi_vect, debug);
-    /*
+    //name = "object";
+    //gettf.build_center(name, roi_vect, debug);
+    
     //IMPLEMENT ROI
     int nr_of_objs = roi_vect.size() / 5;
-    int count = 0;
-    for(int x = 0, x < nr_of_objs, x++)
-    {   
-        int id = roi_vect[count];
-        name = "object"; // link from id
-        vector<int> obj_roi;
-        for(int y = 1; y <= 4; y++)
-        {
-            count++;
-            obj_roi = roi_vect[count];
-        }
-        count++;        
-        gettf.build_center(name, roi_vect, debug);
+    std::cout<< nr_of_objs << endl;
+    int counter = 0;
+    vector<int> obj_roi;
+    obj_roi.clear();
+    
+    if(nr_of_objs > 0)
+    {
+        for(int x = 0; x < nr_of_objs; x++)
+        {   
+            counter = x*5;
+            name = std::to_string(roi_vect[counter]); // link from id
+            std::cout << "Counter: " << counter << endl;
+            std::cout << "Name: " << name << endl;
+            for(int y = 0; y <= 3; y++)
+            {
+                counter++;
+                obj_roi.push_back(roi_vect[counter]);
+                std::cout << "roi_vect: " << roi_vect[counter] << endl;
+                std::cout << "obj_roi: " << obj_roi[y] << endl;
+            }      
+            gettf.build_center(name, obj_roi, debug);
+        } 
     }
-    count = 0;
-    */
-
+    
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"build object center: "<< duration <<'\n';
