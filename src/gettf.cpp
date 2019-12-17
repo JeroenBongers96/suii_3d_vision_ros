@@ -24,13 +24,22 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects(pcl::PointCloud<pcl::
 
 }
 
-void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_name)
+pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
 {
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    temp_cloud = filter.cut_Filter_2(cloud, roi[0], roi[2], roi[1], roi[3]);
+    return(temp_cloud);
+
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::filter_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
     //Filter cloud
-    cloud = filter.pt_Filter(cloud);
-    cloud = filter.d_Filter(cloud);
+    temp_cloud = filter.pt_Filter(cloud);
+    temp_cloud = filter.d_Filter(temp_cloud);
     //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
-    objects_struct = segment.getTableSeg(cloud);
+    return(temp_cloud);
 }
 
 //getTf member function
@@ -58,16 +67,19 @@ void Gettf::build_center(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string name,
         temp_cloud = segment.getObjectSeg(temp_cloud); //check if necesarry
         tf_struct_data object_tf = transform.getTf(temp_cloud);
         //objects_struct.object = segment.getObjectSeg(objects_struct.object);
-        //tf_struct_data object_tf = transform.getTf(objects_struct.object);
+        */
+        //pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        
+        tf_struct_data object_tf = transform.getTf(cloud);
         center.name = name;
         center.center = object_tf.center;
         center.x_axis = object_tf.x_axis;
         center.y_axis = object_tf.y_axis;
-        center.z_axis = object_tf.z_axis;*/
+        center.z_axis = object_tf.z_axis;
         if (debug)
         {
             viewer = vis.addCloud(viewer, cloud);
-            //viewer = vis.addTf(viewer, object_tf);
+            viewer = vis.addTf(viewer, object_tf);
         }
     }
     

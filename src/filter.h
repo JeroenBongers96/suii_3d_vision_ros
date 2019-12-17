@@ -16,8 +16,8 @@ class Filter
 {
     private:
         // Define min and max for X, Y and Z
-        float minX = -0.2, minY = -0.2, minZ = +0.1;
-        float maxX = +0.2, maxY = +0.2, maxZ = +2.5;  
+        float minX = -2.5, minY = -2.5, minZ = +0.1;
+        float maxX = +2.5, maxY = +2.5, maxZ = +2.5;  
         rs2::points points;
 
     public:     
@@ -25,6 +25,7 @@ class Filter
         pcl::PointCloud<pcl::PointXYZ>::Ptr pt_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
         pcl::PointCloud<pcl::PointXYZ>::Ptr d_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
         pcl::PointCloud<pcl::PointXYZ>::Ptr cut_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int xmin, int xmax, int ymin, int ymax);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cut_Filter_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int xmin, int xmax, int ymin, int ymax);
         pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh);
 };
 

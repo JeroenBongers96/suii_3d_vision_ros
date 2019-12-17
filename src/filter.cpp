@@ -52,6 +52,28 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter(pcl::PointCloud<pcl::Poin
 	return cloud;
 }
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int xmin, int xmax, int ymin, int ymax)
+{
+    cout << "xmin: " << xmin << "xmax: " << xmax << "ymin: " << ymin << "ymax: " << ymax <<endl;
+    int i = 0;
+    for(int y = 0; y < 480; ++y)
+    {
+        for(int x = 0; x < 640; ++x)
+        {
+            
+            if(x <= xmin | x >= xmax | y <= ymin | y >= ymax)
+            {
+                
+                cloud->points[i].x = 0;
+                cloud->points[i].y = 0;
+                cloud->points[i].z = 0;
+            }
+            ++i;
+        }
+    }
+	return cloud;
+}
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh)
 {
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;

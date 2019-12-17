@@ -8,7 +8,8 @@
 
 using namespace std;
 using namespace cv;
-pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud_2 (new pcl::PointCloud<pcl::PointXYZ>);
 
 int main(int argc, char** argv){
     string file_name = "";
@@ -41,15 +42,19 @@ int main(int argc, char** argv){
     GetImages getimage;
     img_struct images = getimage.GetPic();
     Mat color = images.Image; 
-    cloud = images.Cloud;
-    roi_vect = getimage.GetRoi(argc, argv, color, debug);
+    main_cloud = images.Cloud;
+    main_cloud_2 = main_cloud;
 
-    //CUT FILTER FOR EVERY OBJECT
-    pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    roi_vect = getimage.GetRoi(argc, argv, color, debug);
+    for(int x = 0; x < roi_vect.size(); x++)
+    {
+        cout << "roi list contatins : " << roi_vect[x] << endl;
+    }
+    
     
     //IMPLEMENT ROI
     int nr_of_objs = roi_vect.size() / 5;
-    std::cout<< nr_of_objs << endl;
+    std::cout<< "nr of objects: " << nr_of_objs << endl;
     int counter = 0;
     vector<int> obj_roi;
     obj_roi.clear();
@@ -58,7 +63,6 @@ int main(int argc, char** argv){
     {
         for(int x = 0; x < nr_of_objs; x++)
         {   
-            counter = x*5;
             name = std::to_string(roi_vect[counter]); // link from id
             std::cout << "Counter: " << counter << endl;
             std::cout << "Name: " << name << endl;
@@ -68,14 +72,35 @@ int main(int argc, char** argv){
                 obj_roi.push_back(roi_vect[counter]);
                 std::cout << "roi_vect: " << roi_vect[counter] << endl;
                 std::cout << "obj_roi: " << obj_roi[y] << endl;
-            }      
-            test_cloud = gettf.cutting_objects(cloud, obj_roi, debug);
-            gettf.build_center(test_cloud ,name, roi_vect, debug);
-            break;
+            }  
+            //CUT FILTER FOR EVERY OBJECT
+            if(counter < 5)
+            {
+                pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud = gettf.cutting_objects(main_cloud, obj_roi, debug);
+                cout << "obj_roi cloud: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
+                cout << "cloud size before filter: " << test_cloud->points.size () << endl;
+                test_cloud = gettf.filter_pcd(test_cloud);
+                cout << "cloud size after filter: " << test_cloud->points.size () << endl;
+                gettf.build_center(test_cloud ,name, obj_roi, debug);
+                obj_roi.clear();
+                counter ++;
+            }
+            else
+            {
+                pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud2 = gettf.cutting_objects_2(main_cloud_2, obj_roi, debug);
+                cout << "obj_roi cloud2: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
+                cout << "cloud2 size before filter: " << test_cloud2->points.size () << endl;
+                test_cloud2 = gettf.filter_pcd(test_cloud2);
+                cout << "cloud2 size after filter: " << test_cloud2->points.size () << endl;
+                gettf.build_center(test_cloud2 ,name, obj_roi, debug);
+                obj_roi.clear();
+                counter ++;
+            }
+            
         } 
     }
 
-    gettf.send_pcd(cloud, file_name);
+    //gettf.send_pcd(cloud, file_name);
 
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -83,7 +108,8 @@ int main(int argc, char** argv){
     }
 
     //FOR TESTING SENDING TIME PCD
-    cloud = gettf.time_test();
+    main_cloud = gettf.time_test();
+
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"DURATION OF SENDING A PCD FROM FILE TO FILE : "<< duration <<'\n';
