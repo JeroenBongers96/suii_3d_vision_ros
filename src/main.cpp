@@ -16,7 +16,10 @@ int main(int argc, char** argv){
     vector<int> roi_vect;
     bool time_debug = false;
     bool debug = true;
+<<<<<<< HEAD
     string name = "";
+=======
+>>>>>>> master
 
     ros::init(argc, argv,"vision_tf_broadcaster");
     ros::NodeHandle node;
