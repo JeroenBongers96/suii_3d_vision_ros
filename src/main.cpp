@@ -10,6 +10,8 @@ using namespace std;
 using namespace cv;
 pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud (new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud_2 (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud2 (new pcl::PointCloud<pcl::PointXYZ>);
 
 int main(int argc, char** argv){
     string file_name = "";
@@ -42,8 +44,11 @@ int main(int argc, char** argv){
     GetImages getimage;
     img_struct images = getimage.GetPic();
     Mat color = images.Image; 
-    main_cloud = images.Cloud;
-    main_cloud_2 = main_cloud;
+    *main_cloud = *images.Cloud;
+    *main_cloud_2 = *images.Cloud;
+    
+    //main_cloud_2 = images.Cloud;
+    //main_cloud
 
     roi_vect = getimage.GetRoi(argc, argv, color, debug);
     for(int x = 0; x < roi_vect.size(); x++)
@@ -76,22 +81,20 @@ int main(int argc, char** argv){
             //CUT FILTER FOR EVERY OBJECT
             if(counter < 5)
             {
-                pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud = gettf.cutting_objects(main_cloud, obj_roi, debug);
+                //main_cloud2
+                test_cloud = gettf.cutting_objects(main_cloud, obj_roi, debug);
                 cout << "obj_roi cloud: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
-                cout << "cloud size before filter: " << test_cloud->points.size () << endl;
                 test_cloud = gettf.filter_pcd(test_cloud);
-                cout << "cloud size after filter: " << test_cloud->points.size () << endl;
                 gettf.build_center(test_cloud ,name, obj_roi, debug);
                 obj_roi.clear();
                 counter ++;
             }
             else
             {
-                pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud2 = gettf.cutting_objects_2(main_cloud_2, obj_roi, debug);
+                //main_cloud3
+                test_cloud2 = gettf.cutting_objects_2(main_cloud_2, obj_roi, debug);
                 cout << "obj_roi cloud2: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
-                cout << "cloud2 size before filter: " << test_cloud2->points.size () << endl;
                 test_cloud2 = gettf.filter_pcd(test_cloud2);
-                cout << "cloud2 size after filter: " << test_cloud2->points.size () << endl;
                 gettf.build_center(test_cloud2 ,name, obj_roi, debug);
                 obj_roi.clear();
                 counter ++;
