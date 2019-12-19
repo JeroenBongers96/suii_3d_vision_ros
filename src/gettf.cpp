@@ -26,7 +26,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
     if (name == "table"){
         *temp_cloud = *main_cloud;
         temp_cloud = filter_pcd(temp_cloud);
-        //temp_cloud = filter.outlier_Removal(temp_cloud);
+        temp_cloud = filter.outlier_Removal(temp_cloud);
         segmentation(temp_cloud);
         temp_cloud = objects_struct.table;
         tf_struct_data table_tf = transform.getTf(temp_cloud);
@@ -46,7 +46,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         *temp_cloud = *main_cloud;
         temp_cloud = cutting_objects(temp_cloud, roi, debug);
         temp_cloud = filter_pcd(temp_cloud);
-        //temp_cloud = filter.outlier_Removal(temp_cloud);
+        temp_cloud = filter.outlier_Removal(temp_cloud);
         segmentation(temp_cloud);
         tf_struct_data object_tf = transform.getTf(objects_struct.object);
         center.name = name;
