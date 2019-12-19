@@ -32,8 +32,8 @@ class Gettf
 
     public:
         Gettf(bool);
+        void send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr, string);
         pcl::PointCloud<pcl::PointXYZ>::Ptr cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr, vector<int>, bool);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cutting_objects_2(pcl::PointCloud<pcl::PointXYZ>::Ptr, vector<int>, bool);
         pcl::PointCloud<pcl::PointXYZ>::Ptr filter_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr);
         void build_center(pcl::PointCloud<pcl::PointXYZ>::Ptr, string, vector<int>, bool);
         vector<tf_br_data> build_view(bool);

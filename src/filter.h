@@ -25,7 +25,6 @@ class Filter
         pcl::PointCloud<pcl::PointXYZ>::Ptr pt_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
         pcl::PointCloud<pcl::PointXYZ>::Ptr d_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
         pcl::PointCloud<pcl::PointXYZ>::Ptr cut_Filter(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int xmin, int xmax, int ymin, int ymax);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cut_Filter_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_2, int xmin, int xmax, int ymin, int ymax);
         pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh);
 };
 

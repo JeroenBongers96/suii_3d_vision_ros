@@ -9,9 +9,7 @@
 using namespace std;
 using namespace cv;
 pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud (new pcl::PointCloud<pcl::PointXYZ>);
-pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud_2 (new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud (new pcl::PointCloud<pcl::PointXYZ>);
-pcl::PointCloud<pcl::PointXYZ>::Ptr test_cloud2 (new pcl::PointCloud<pcl::PointXYZ>);
 
 int main(int argc, char** argv){
     string file_name = "";
@@ -44,8 +42,6 @@ int main(int argc, char** argv){
     GetImages getimage;
     img_struct images = getimage.GetPic();
     Mat color = images.Image; 
-    *main_cloud = *images.Cloud;
-    *main_cloud_2 = *images.Cloud;
     
     //main_cloud_2 = images.Cloud;
     //main_cloud
@@ -56,6 +52,10 @@ int main(int argc, char** argv){
         cout << "roi list contatins : " << roi_vect[x] << endl;
     }
     
+    main_cloud = images.Cloud;
+    gettf.send_pcd(main_cloud, file_name);
+    name = "table";
+    gettf.build_center(main_cloud, name, roi_vect, debug);
     
     //IMPLEMENT ROI
     int nr_of_objs = roi_vect.size() / 5;
@@ -79,27 +79,15 @@ int main(int argc, char** argv){
                 std::cout << "obj_roi: " << obj_roi[y] << endl;
             }  
             //CUT FILTER FOR EVERY OBJECT
-            if(counter < 5)
-            {
-                //main_cloud2
-                test_cloud = gettf.cutting_objects(main_cloud, obj_roi, debug);
-                cout << "obj_roi cloud: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
-                test_cloud = gettf.filter_pcd(test_cloud);
-                gettf.build_center(test_cloud ,name, obj_roi, debug);
-                obj_roi.clear();
-                counter ++;
-            }
-            else
-            {
-                //main_cloud3
-                test_cloud2 = gettf.cutting_objects_2(main_cloud_2, obj_roi, debug);
-                cout << "obj_roi cloud2: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
-                test_cloud2 = gettf.filter_pcd(test_cloud2);
-                gettf.build_center(test_cloud2 ,name, obj_roi, debug);
-                obj_roi.clear();
-                counter ++;
-            }
-            
+
+            //main_cloud2
+            *main_cloud = *images.Cloud; //make DATA copy of images.Cloud
+            test_cloud = gettf.cutting_objects(main_cloud, obj_roi, debug);
+            cout << "obj_roi cloud: " << obj_roi[0] << ", " << obj_roi[2] << ", " << obj_roi[1] << ", " << obj_roi[3] << ", " << endl;
+            test_cloud = gettf.filter_pcd(test_cloud);
+            gettf.build_center(test_cloud ,name, obj_roi, debug);
+            obj_roi.clear();
+            counter ++;
         } 
     }
 
@@ -122,9 +110,6 @@ int main(int argc, char** argv){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout<<"start build table : "<< duration <<'\n';
     }
-
-    //name = "table";
-    //gettf.build_center(name, roi_vect, debug);
 
     if (time_debug){
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;

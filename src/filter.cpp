@@ -52,26 +52,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter(pcl::PointCloud<pcl::Poin
 	return cloud;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_2, int xmin, int xmax, int ymin, int ymax)
-{
-    int i = 0;
-    cout << "obj_roi cloud2: " << xmin << ", " << xmax << ", " << ymin << ", " << ymax << endl;
-    for(int y = 0; y < 480; ++y)
-    {
-        for(int x = 0; x < 640; ++x)
-        {
-            if(x <= xmin | x >= xmax | y <= ymin | y >= ymax)
-            {
-                cloud_2->points[i].x = 0;
-                cloud_2->points[i].y = 0;
-                cloud_2->points[i].z = 0;
-            }      
-            ++i;
-        }       
-    }
-	return cloud_2;
-}
-
 pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh)
 {
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;

@@ -16,18 +16,19 @@ Gettf::Gettf(bool debug)
     }
 }
 
+void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_name)
+{
+    //Filter cloud
+    //cloud = filter.pt_Filter(cloud);
+    //cloud = filter.d_Filter(cloud);
+    //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
+    objects_struct = segment.getTableSeg(cloud);
+}
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
     temp_cloud = filter.cut_Filter(cloud, roi[0], roi[2], roi[1], roi[3]);
-    return(temp_cloud);
-
-}
-
-pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects_2(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
-{
-    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    temp_cloud = filter.cut_Filter_2(cloud, roi[0], roi[2], roi[1], roi[3]);
     return(temp_cloud);
 
 }
