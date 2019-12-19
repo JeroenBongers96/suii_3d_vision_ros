@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     double duration;
     vector<int> roi_vect;
     bool time_debug = false;
-    bool debug = false;
+    bool debug = true;
 
     ros::init(argc, argv,"vision_tf_broadcaster");
     ros::NodeHandle node;

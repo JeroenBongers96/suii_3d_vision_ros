@@ -66,5 +66,7 @@ img_struct Pipeline::getFrames(void)
 
     imgs_data.Cloud = pcl_cloud;
 
+    pipe.stop();
+
     return imgs_data;
 }
