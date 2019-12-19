@@ -20,6 +20,7 @@ class Gettf
 {
     private:
         //creating variables
+        pcl::PointCloud<pcl::PointXYZ>::Ptr main_cloud;
         pcl::visualization::PCLVisualizer::Ptr viewer;
         obj_struct objects_struct;
         vector<tf_br_data> center_list;
@@ -27,15 +28,15 @@ class Gettf
         Filter filter;
         Segmentation segment;
         Transformation transform;
-        Vis vis;
+        Vis vis;        
+        void segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr); 
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr, vector<int>, bool);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr filter_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr);
         tf_br_data transform_data(tf_struct_data center_result);
 
     public:
-        Gettf(bool);
-        void send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr, string);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr, vector<int>, bool);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr filter_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr);
-        void build_center(pcl::PointCloud<pcl::PointXYZ>::Ptr, string, vector<int>, bool);
+        Gettf(pcl::PointCloud<pcl::PointXYZ>::Ptr, bool);               
+        void build_center(string, vector<int>, bool);
         vector<tf_br_data> build_view(bool);
         void show_viewer(void);
         bool reset_view(void);
