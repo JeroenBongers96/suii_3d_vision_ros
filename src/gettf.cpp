@@ -5,10 +5,11 @@
 using namespace std;
 
 //getTf constructor
-Gettf::Gettf(bool debug)
+Gettf::Gettf(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool debug)
 {
     cout << "GetTf CREATED" << endl;
     cout << "##############################" << endl;
+    main_cloud = cloud;
     if (debug)
     {
         //Create viewer
@@ -16,22 +17,19 @@ Gettf::Gettf(bool debug)
     }
 }
 
-void Gettf::send_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, string cloud_name)
-{
-    //Filter cloud
-    cloud = filter.pt_Filter(cloud);
-    cloud = filter.d_Filter(cloud);
-    //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
-    objects_struct = segment.getTableSeg(cloud);
-}
-
 //getTf member function
 void Gettf::build_center(string name, vector<int> roi, bool debug)
-{
+{   
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud (new pcl::PointCloud<pcl::PointXYZ>);
     tf_struct_data center;
-    //Need to implement ROI for specific objects and include pt_Filter cut the objects out
+
     if (name == "table"){
-        tf_struct_data table_tf = transform.getTf(objects_struct.table);
+        *temp_cloud = *main_cloud;
+        temp_cloud = filter_pcd(temp_cloud);
+        //temp_cloud = filter.outlier_Removal(temp_cloud);
+        segmentation(temp_cloud);
+        temp_cloud = objects_struct.table;
+        tf_struct_data table_tf = transform.getTf(temp_cloud);
         center.name = name;
         center.center = table_tf.center;
         center.x_axis = table_tf.x_axis;
@@ -43,14 +41,14 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
             viewer = vis.addTf(viewer, table_tf);
         }
     }
+
     else{
-        /*//Add pt_filter from ROI
-        pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-        temp_cloud = filter.cut_Filter(objects_struct.object, roi[1], roi[2], roi[3], roi[4]);
-        temp_cloud = segment.getObjectSeg(temp_cloud); //check if necesarry
-        tf_struct_data object_tf = transform.getTf(temp_cloud);
-        //objects_struct.object = segment.getObjectSeg(objects_struct.object);
-        //tf_struct_data object_tf = transform.getTf(objects_struct.object);
+        *temp_cloud = *main_cloud;
+        temp_cloud = cutting_objects(temp_cloud, roi, debug);
+        temp_cloud = filter_pcd(temp_cloud);
+        //temp_cloud = filter.outlier_Removal(temp_cloud);
+        segmentation(temp_cloud);
+        tf_struct_data object_tf = transform.getTf(objects_struct.object);
         center.name = name;
         center.center = object_tf.center;
         center.x_axis = object_tf.x_axis;
@@ -60,7 +58,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         {
             viewer = vis.addCloud(viewer, objects_struct.object);
             viewer = vis.addTf(viewer, object_tf);
-        }*/
+        }
     }
     
     tf_br_data tf_br = transform_data(center);
@@ -106,6 +104,29 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::time_test(void)
     return(objects_struct.table);
 }
 
+void Gettf::segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
+    objects_struct = segment.getTableSeg(cloud);
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    temp_cloud = filter.cut_Filter(cloud, roi[0], roi[2], roi[1], roi[3]);
+    return(temp_cloud);
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::filter_pcd(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    //Filter cloud
+    temp_cloud = filter.pt_Filter(cloud);
+    temp_cloud = filter.d_Filter(temp_cloud);
+    //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
+    return(temp_cloud);
+}
+
 tf_br_data Gettf::transform_data(tf_struct_data center_result)
 {
     tf_br_data tf_br;
@@ -113,7 +134,6 @@ tf_br_data Gettf::transform_data(tf_struct_data center_result)
     tf_br.pos_x = center_result.center.x;
     tf_br.pos_y = center_result.center.y;
     tf_br.pos_z = center_result.center.z;
-    
 
     //first was atan2
     //double yaw = atan2((center_result.x_axis.y - center_result.center.y),(center_result.x_axis.x - center_result.center.x));

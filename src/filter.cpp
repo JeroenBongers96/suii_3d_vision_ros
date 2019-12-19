@@ -52,7 +52,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::cut_Filter(pcl::PointCloud<pcl::Poin
 	return cloud;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, double meanK, double mulThresh)
+pcl::PointCloud<pcl::PointXYZ>::Ptr Filter::outlier_Removal(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);

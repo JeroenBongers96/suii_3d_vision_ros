@@ -22,7 +22,7 @@ obj_struct Segmentation::getTableSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setMaxIterations (100);
-    seg.setDistanceThreshold (0.02); // Original: 0.02 // 0.005
+    seg.setDistanceThreshold (0.005); // Original: 0.02 // 0.005
 
     int i=0, nr_points = (int) cloud->points.size ();
     while (cloud->points.size () > 0.3 * nr_points)
