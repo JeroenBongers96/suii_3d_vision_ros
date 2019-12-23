@@ -5,6 +5,7 @@
 #include "tf_struct.h"
 #include "gettf.h"
 #include "getImages.h"
+#include "nameConverter.h"
 
 using namespace std;
 using namespace cv;
@@ -17,6 +18,7 @@ int main(int argc, char** argv){
     bool timeDebug = false;
     bool debug = true;
     string name = "";
+    NameConverter nameConverter;
 
     //Create vision_tf_broadcaster node
     ros::init(argc, argv,"vision_tf_broadcaster");
@@ -63,7 +65,7 @@ int main(int argc, char** argv){
     {
         for(int x = 0; x < nrOfObjs; x++)
         {   
-            name = std::to_string(roiVect[counter]); // link from id
+            name = nameConverter.convertName(roiVect[counter]);
             std::cout << "Counter: " << counter << endl;
             std::cout << "Name: " << name << endl;
             for(int y = 0; y <= 3; y++)

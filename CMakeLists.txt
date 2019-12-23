@@ -135,7 +135,7 @@ include_directories(
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable (main src/main.cpp src/gettf.cpp src/pipeline.cpp src/filter.cpp src/segmentation.cpp src/tf.cpp src/vis.cpp src/getImages.cpp)
+add_executable (main src/main.cpp src/gettf.cpp src/pipeline.cpp src/filter.cpp src/segmentation.cpp src/tf.cpp src/vis.cpp src/getImages.cpp src/nameConverter.cpp)
 
 target_link_libraries(main ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 target_link_libraries(main ${realsense2_LIBRARY})
