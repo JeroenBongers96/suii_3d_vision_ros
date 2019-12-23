@@ -105,7 +105,7 @@ bool Gettf::reset_view(void)
 pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::time_test(void)
 {
     //This function is purely for testing the speed of sending a PCD!
-    return(objects_struct.table);
+    return(main_cloud);
 }
 
 void Gettf::segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
