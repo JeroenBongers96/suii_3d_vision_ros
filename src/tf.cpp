@@ -10,6 +10,7 @@ Transformation::Transformation()
 
 tf_struct_data Transformation::getTf(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    //Calculate the TF from a given PCD
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
     feature_extractor.setInputCloud (cloud);
     feature_extractor.compute ();

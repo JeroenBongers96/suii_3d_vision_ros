@@ -22,7 +22,7 @@ obj_struct Segmentation::getTableSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setMaxIterations (100);
-    seg.setDistanceThreshold (0.005); // Original: 0.02 // 0.005
+    seg.setDistanceThreshold (0.005); // Original: 0.02
 
     int i=0, nr_points = (int) cloud->points.size ();
     while (cloud->points.size () > 0.3 * nr_points)
@@ -65,7 +65,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Segmentation::getObjectSeg(pcl::PointCloud<p
     
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-    ec.setClusterTolerance (0.005); // original: 0.02
+    ec.setClusterTolerance (0.001); // original: 0.02 
     ec.setMinClusterSize (100);
     ec.setMaxClusterSize (25000);
     ec.setSearchMethod (tree);
@@ -91,14 +91,3 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Segmentation::getObjectSeg(pcl::PointCloud<p
     
     return biggest_cloud;
 }
-
-/*
-////////////////////////////////////////////////////////////////////
-//THIS IS FOR LATER IMPLEMENTING SENDING POINTERS INSTEAD OF PCD'S//
-////////////////////////////////////////////////////////////////////
-
-pcl::PointCloud<pcl::PointXYZ>::Ptr* Segmentation::getObjectSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr *cloud)
-{
-    return cloud;
-}
-*/
