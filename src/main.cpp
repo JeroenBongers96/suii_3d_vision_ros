@@ -100,7 +100,8 @@ int main(int argc, char** argv){
     
     //Broadcast all TF's
     while(ros::ok())
-    {
+    {   
+        //loop 10 times so RVIZ, or other listeners, are able to recive the broadcasted data
         for(int i = 0; i < centerList.size(); i++)
             {
                 static tf::TransformBroadcaster br;
@@ -133,12 +134,8 @@ int main(int argc, char** argv){
     //Show the results
     if(debug)
     {
-        //Use this while loop to stop viewer with ^c
-        while(ros::ok())
-        {
-            getTf.show_viewer();
-            loop_rate.sleep();
-        }
+        getTf.show_viewer();
+        loop_rate.sleep();        
     }
 
     getTf.reset_view();  
