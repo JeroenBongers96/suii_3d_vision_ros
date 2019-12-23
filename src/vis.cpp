@@ -15,6 +15,7 @@ Vis::Vis(void)
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::createViewer(void)
 {
+    //Creates an empty Viewer which later will be filled with PCD's and TF's
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
     viewer->setBackgroundColor (0, 0, 0);    
     return(viewer);
@@ -23,6 +24,7 @@ pcl::visualization::PCLVisualizer::Ptr Vis::createViewer(void)
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::addCloud(pcl::visualization::PCLVisualizer::Ptr viewer,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    //Function to add PCD cloud to the Viewer.
     std::string cluster_name = "sample_cloud_" + std::to_string(cloud_count);
     nameCounter(cloud_count);
     pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color(cloud, cloud_color.col1, cloud_color.col2, cloud_color.col3);
@@ -35,6 +37,7 @@ pcl::visualization::PCLVisualizer::Ptr Vis::addCloud(pcl::visualization::PCLVisu
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::addTf(pcl::visualization::PCLVisualizer::Ptr viewer, tf_struct_data data)
 {
+    //Function to add the TF's to the viewer
     viewer->addLine (data.center, data.x_axis, 1.0f, 0.0f, 0.0f, ("major eigen vector " + std::to_string(tf_count))); //color red
     viewer->addLine (data.center, data.y_axis, 0.0f, 1.0f, 0.0f, ("middle eigen vector" + std::to_string(tf_count))); //color green
     viewer->addLine (data.center, data.z_axis, 0.0f, 0.0f, 1.0f, ("minor eigen vector" + std::to_string(tf_count))); //color blue
@@ -45,6 +48,7 @@ pcl::visualization::PCLVisualizer::Ptr Vis::addTf(pcl::visualization::PCLVisuali
 // Visualisations member function
 void Vis::showViewer(pcl::visualization::PCLVisualizer::Ptr viewer)
 {
+    //Function to dispay the viewer
     viewer->addCoordinateSystem (0.1);
     viewer->initCameraParameters ();
     while (!viewer->wasStopped ())
@@ -57,6 +61,7 @@ void Vis::showViewer(pcl::visualization::PCLVisualizer::Ptr viewer)
 // Visualisations member function
 void Vis::nameCounter(int number)
 {
+    //Function for chaning the colors of PCD's
     cloud_name = cloud_name + std::to_string(number);
     if(number == 0){
         cloud_color.col1 = 224;

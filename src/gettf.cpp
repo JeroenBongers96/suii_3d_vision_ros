@@ -23,6 +23,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
     pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud (new pcl::PointCloud<pcl::PointXYZ>);
     tf_struct_data center;
 
+    //Find table TF
     if (name == "table"){
         *temp_cloud = *main_cloud;
         temp_cloud = filter_pcd(temp_cloud);
@@ -42,6 +43,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         }
     }
 
+    //Find object TF
     else{
         *temp_cloud = *main_cloud;
         temp_cloud = cutting_objects(temp_cloud, roi, debug);
@@ -82,6 +84,7 @@ vector<tf_br_data> Gettf::build_view(bool debug)
             cout << "quat_w: " << center_list[i].quat_w << endl;            
         }
     }
+    //Return all the TF results
     return (center_list);
 }
 
@@ -93,6 +96,7 @@ void Gettf::show_viewer(void)
 // getTf member function
 bool Gettf::reset_view(void)
 {
+    //Clear center_list
     center_list.erase(center_list.begin(),center_list.end());
     objects_struct = obj_struct();
     cout << "cleared list" << endl;
@@ -112,6 +116,7 @@ void Gettf::segmentation(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::cutting_objects(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> roi, bool debug)
 {
+    //This function will cut out the object PCD from the total PCD
     pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
     temp_cloud = filter.cut_Filter(cloud, roi[0], roi[2], roi[1], roi[3]);
     return(temp_cloud);
@@ -123,20 +128,18 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Gettf::filter_pcd(pcl::PointCloud<pcl::Point
     //Filter cloud
     temp_cloud = filter.pt_Filter(cloud);
     temp_cloud = filter.d_Filter(temp_cloud);
-    //Segment.getTableSeg gets table segmentation and cuts it out of the PCD. It will retrun the table PCD and a PCD containing everything else
     return(temp_cloud);
 }
 
 tf_br_data Gettf::transform_data(tf_struct_data center_result)
 {
+    //Calculate the TF and transform it for the ROS TF broadcaster
     tf_br_data tf_br;
     tf_br.name = center_result.name;
     tf_br.pos_x = center_result.center.x;
     tf_br.pos_y = center_result.center.y;
     tf_br.pos_z = center_result.center.z;
 
-    //first was atan2
-    //double yaw = atan2((center_result.x_axis.y - center_result.center.y),(center_result.x_axis.x - center_result.center.x));
     double yaw = atan((center_result.x_axis.y - center_result.center.y)/(center_result.x_axis.x - center_result.center.x));
     if ((center_result.x_axis.y - center_result.center.y) > 0 && (center_result.x_axis.x - center_result.center.x) < 0)
     {
@@ -169,7 +172,7 @@ tf_br_data Gettf::transform_data(tf_struct_data center_result)
         fin.close();  
     }
 
-
+    //Calculation to go from Euler to Quaternion
     double pitch = 0.0;
     double roll = 0.0;
     double cy = cos(yaw * 0.5);
