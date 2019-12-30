@@ -5,12 +5,15 @@ using namespace cv;
 // Pipeline constructor
 Pipeline::Pipeline()
 {
-    cout << "PIPELINE CREATED" << endl;
-    cout << "##############################" << endl;
+    //cout << "PIPELINE CREATED" << endl;
+    //cout << "##############################" << endl;
 }
 
 void Pipeline::pipeStart(void)
 {
+    clock_t start;
+    start = clock();
+    
     cfg.enable_stream( RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_BGR8, 30 );
     cfg.enable_stream(RS2_STREAM_INFRARED, 640, 480, RS2_FORMAT_Y8, 30);
     cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 30);
@@ -20,16 +23,20 @@ void Pipeline::pipeStart(void)
         //Wait for all configured streams to produce a frame
         frames = pipe.wait_for_frames();
     }
-    cout << "PIPELINE STARTED" << endl;
-    cout << "##############################" << endl;
+    //cout << "PIPELINE STARTED" << endl;
+    //cout << "##############################" << endl;
 
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"PipeStart finished in : "<< duration << ' [s]' <<'\n';
 }
 
 //Function for calculating the pointcloud
 pcl::PointCloud<pcl::PointXYZ>::Ptr points_to_pcl(const rs2::points& points)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    clock_t start;
+    start = clock();
 
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
     auto sp = points.get_profile().as<rs2::video_stream_profile>();
     cloud->width = sp.width();
     cloud->height = sp.height();
@@ -44,12 +51,18 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr points_to_pcl(const rs2::points& points)
         ptr++;
     }
 
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"points_to_pcl finished in : "<< duration << ' [s]' <<'\n';
+
     return cloud;
 }
 
 //Get frames and push them in struct
 img_struct Pipeline::getFrames(void)
 {
+    clock_t start;
+    start = clock();
+
     frames = pipe.wait_for_frames();
 
     rs2::frame depth = frames.get_depth_frame();
@@ -67,6 +80,9 @@ img_struct Pipeline::getFrames(void)
     imgs_data.Cloud = pcl_cloud;
 
     pipe.stop();
+
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"getFrames finished in : "<< duration << ' [s]' <<'\n';
 
     return imgs_data;
 }

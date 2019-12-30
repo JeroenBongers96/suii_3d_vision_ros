@@ -3,8 +3,8 @@
 //Visualisation constructor
 Vis::Vis(void)
 {
-    cout << "VIEWER CREATED" << endl;
-    cout << "##############################" << endl;
+    //cout << "VIEWER CREATED" << endl;
+    //cout << "##############################" << endl;
     cloud_color.col1 = 0;
     cloud_color.col2 = 255;
     cloud_color.col3 = 0;    
@@ -15,15 +15,24 @@ Vis::Vis(void)
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::createViewer(void)
 {
+    clock_t start;
+    start = clock();
+
     //Creates an empty Viewer which later will be filled with PCD's and TF's
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
     viewer->setBackgroundColor (0, 0, 0);    
+
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"createViewer finished in : "<< duration << ' [s]' <<'\n';
     return(viewer);
 }
 
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::addCloud(pcl::visualization::PCLVisualizer::Ptr viewer,pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    clock_t start;
+    start = clock();
+
     //Function to add PCD cloud to the Viewer.
     std::string cluster_name = "sample_cloud_" + std::to_string(cloud_count);
     nameCounter(cloud_count);
@@ -31,17 +40,26 @@ pcl::visualization::PCLVisualizer::Ptr Vis::addCloud(pcl::visualization::PCLVisu
     cloud_name += std::to_string(cloud_count);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, single_color, cluster_name);
     cloud_count ++;
+    
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"addCloud finished in : "<< duration << ' [s]' <<'\n';
     return(viewer);
 }
 
 // Visualisation member function
 pcl::visualization::PCLVisualizer::Ptr Vis::addTf(pcl::visualization::PCLVisualizer::Ptr viewer, tf_struct_data data)
 {
+    clock_t start;
+    start = clock();
+
     //Function to add the TF's to the viewer
     viewer->addLine (data.center, data.x_axis, 1.0f, 0.0f, 0.0f, ("major eigen vector " + std::to_string(tf_count))); //color red
     viewer->addLine (data.center, data.y_axis, 0.0f, 1.0f, 0.0f, ("middle eigen vector" + std::to_string(tf_count))); //color green
     viewer->addLine (data.center, data.z_axis, 0.0f, 0.0f, 1.0f, ("minor eigen vector" + std::to_string(tf_count))); //color blue
     tf_count ++;
+
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"addTf finished in : "<< duration << ' [s]' <<'\n';
     return(viewer);
 }
 

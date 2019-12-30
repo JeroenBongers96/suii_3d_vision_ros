@@ -22,7 +22,7 @@ class YoloServer(object):
         img_decoded = base64.b64decode(byte_img)
         img = numpy.frombuffer(img_decoded, dtype=numpy.uint8)
         cv_img = cv2.imdecode(img, flags=1)
-        names = self.yolo.run(numpy.asarray(cv_img), False)
+        names = self.yolo.run(numpy.asarray(cv_img), True)
         return (0x00, {'names': names})
 
 

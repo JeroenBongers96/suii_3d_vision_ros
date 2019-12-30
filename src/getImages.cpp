@@ -5,7 +5,7 @@ using namespace std;
 GetImages::GetImages()
 {
     pipe.pipeStart();
-    cout << "GETIMAGES CREATED" << endl;
+    //cout << "GETIMAGES CREATED" << endl;
 }
 
 img_struct GetImages::GetPic(void)
@@ -34,8 +34,11 @@ vector<int> GetImages::GetRoi(int argc, char **argv, Mat img, bool debug)
     header.stamp = ros::Time::now(); // time
     img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::RGB8, img);
     img_bridge.toImageMsg(img_msg); // from cv_bridge to sensor_msgs::Image
-    srv.request.input = img_msg;
 
+    clock_t start;
+    start = clock();
+    
+    srv.request.input = img_msg;
     if (client.call(srv))
     {
 
@@ -48,6 +51,8 @@ vector<int> GetImages::GetRoi(int argc, char **argv, Mat img, bool debug)
             if(debug)
                 ROS_INFO("Sum: %ld", (long int)srv.response.output[i]);
         }
+        double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        std::cout<<"GetRoi (fromYOLO) finished in : "<< duration << ' [s]' <<'\n';
     }
     else
     {

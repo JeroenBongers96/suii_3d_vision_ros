@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     double duration;
     vector<int> roiVect;
     bool timeDebug = false;
-    bool debug = true;
+    bool debug = false;
     string name = "";
     NameConverter nameConverter;
 
@@ -55,7 +55,8 @@ int main(int argc, char** argv){
     
     //Check for number of objects resulted from YOLO
     int nrOfObjs = roiVect.size() / 5;
-    std::cout<< "nr of objects: " << nrOfObjs << endl;
+    if(debug)
+        std::cout<< "nr of objects: " << nrOfObjs << endl;
     int counter = 0;
     vector<int> objRoi;
     objRoi.clear();
@@ -66,38 +67,47 @@ int main(int argc, char** argv){
         for(int x = 0; x < nrOfObjs; x++)
         {   
             name = nameConverter.convertName(roiVect[counter]);
-            std::cout << "Counter: " << counter << endl;
-            std::cout << "Name: " << name << endl;
+            if(debug)
+            {            
+                std::cout << "Counter: " << counter << endl;
+                std::cout << "Name: " << name << endl;
+            }
             for(int y = 0; y <= 3; y++)
             {
                 counter++;
                 objRoi.push_back(roiVect[counter]);
-                std::cout << "roiVect: " << roiVect[counter] << endl;
-                std::cout << "objRoi: " << objRoi[y] << endl;
+                if(debug)
+                {
+                    std::cout << "roiVect: " << roiVect[counter] << endl;
+                    std::cout << "objRoi: " << objRoi[y] << endl;
+                }
             }  
             
             //CUT FILTER FOR EVERY OBJECT
-            cout << "objRoi cloud: " << objRoi[0] << ", " << objRoi[2] << ", " << objRoi[1] << ", " << objRoi[3] << ", " << endl;
+            if(debug)
+                cout << "objRoi cloud: " << objRoi[0] << ", " << objRoi[2] << ", " << objRoi[1] << ", " << objRoi[3] << ", " << endl;
             getTf.build_center(name, objRoi, debug);
             objRoi.clear();
             counter ++;
         } 
     }
 
-    //Function created to test the time required for sending a PCD.
-    if(timeDebug)
-        mainCloud = getTf.time_test();
     
-    if (timeDebug){
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-        std::cout<<"Finished program: "<< duration <<'\n';
-    } 
-
     //Get the result list of all the TF's found
     vector<tf_br_data> centerList = getTf.build_view(debug);
 
     int count = 0;
     
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"Total time of program: "<< duration <<'\n';
+
+
+    //Function created to test the time required for sending a PCD.
+    double startTime = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    mainCloud = getTf.time_test();    
+    double endTime = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"Sending PCD with 307200 data points: "<< (endTime - startTime) <<'\n';
+
     //Broadcast all TF's
     while(ros::ok())
     {   

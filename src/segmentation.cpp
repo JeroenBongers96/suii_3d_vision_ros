@@ -3,13 +3,16 @@
 // Segmentation constructor
 Segmentation::Segmentation()
 {
-    std::cout << "SEGMENTATION CREATED" << std::endl;
-    std::cout << "##############################" << std::endl;
+    //std::cout << "SEGMENTATION CREATED" << std::endl;
+    //std::cout << "##############################" << std::endl;
 }
 
 // Segmentation member function
 obj_struct Segmentation::getTableSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    clock_t start;
+    start = clock();
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZ>);
 
     // Create the segmentation object for the planar model and set all the parameters
@@ -43,13 +46,16 @@ obj_struct Segmentation::getTableSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 
         // Get the points associated with the planar surface
         extract.filter (*cloud_plane);
-        //std::cout << "PointCloud representing the planar component: " << cloud_plane->points.size () << " data points." << std::endl;
+        std::cout << "PointCloud representing the planar component: " << cloud_plane->points.size () << " data points." << std::endl;
         // Remove the planar inliers, extract the rest
         extract.setNegative (true);
         extract.filter (*cloud_f);
         //std::cout << "PointCloud representing the segmented component: " << cloud_f->points.size () << " data points." << std::endl;
         *cloud = *cloud_f;
     }
+
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"GetTableSeg finished in : "<< duration << ' [s]' <<'\n';
 
     objs_data.table = cloud_plane;
     objs_data.object = cloud;
@@ -59,6 +65,9 @@ obj_struct Segmentation::getTableSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 // Segmentation member function
 pcl::PointCloud<pcl::PointXYZ>::Ptr Segmentation::getObjectSeg(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    clock_t start;
+    start = clock();
+
     // Creating the KdTree object for the search method of the extraction
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
     tree->setInputCloud (cloud);
@@ -88,6 +97,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr Segmentation::getObjectSeg(pcl::PointCloud<p
         }
     
     }
+
+    std::cout << "PointCloud representing the segmented component: " << biggest_cloud->points.size () << " data points." << std::endl;
+
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"getObjectSeg finished in : "<< duration << ' [s]' <<'\n';
     
     return biggest_cloud;
 }

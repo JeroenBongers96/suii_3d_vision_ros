@@ -7,8 +7,8 @@ using namespace std;
 //getTf constructor
 Gettf::Gettf(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool debug)
 {
-    cout << "GetTf CREATED" << endl;
-    cout << "##############################" << endl;
+    //cout << "GetTf CREATED" << endl;
+    //cout << "##############################" << endl;
     main_cloud = cloud;
     if (debug)
     {
@@ -51,6 +51,7 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         temp_cloud = filter.outlier_Removal(temp_cloud);
         segmentation(temp_cloud);
         tf_struct_data object_tf = transform.getTf(objects_struct.object);
+
         center.name = name;
         center.center = object_tf.center;
         center.x_axis = object_tf.x_axis;
@@ -58,7 +59,8 @@ void Gettf::build_center(string name, vector<int> roi, bool debug)
         center.z_axis = object_tf.z_axis;
         if (debug)
         {
-            viewer = vis.addCloud(viewer, objects_struct.object);
+            //viewer = vis.addCloud(viewer, objects_struct.object);
+            viewer = vis.addCloud(viewer, temp_cloud);
             viewer = vis.addTf(viewer, object_tf);
         }
     }

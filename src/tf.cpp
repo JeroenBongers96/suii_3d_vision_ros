@@ -3,13 +3,16 @@
 
 Transformation::Transformation()
 {
-    std::cout << "TRANSFORMATION CREATED" << std::endl;
-    std::cout << "##############################" << std::endl;
+    //std::cout << "TRANSFORMATION CREATED" << std::endl;
+    //std::cout << "##############################" << std::endl;
 
 }
 
 tf_struct_data Transformation::getTf(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    clock_t start;
+    start = clock();
+
     //Calculate the TF from a given PCD
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
     feature_extractor.setInputCloud (cloud);
@@ -38,6 +41,8 @@ tf_struct_data Transformation::getTf(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
     tf_tf_data.y_axis = y_axis;
     tf_tf_data.z_axis = z_axis;
 
+    double duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout<<"getTf finished in : "<< duration << ' [s]' <<'\n';
     return(tf_tf_data);
 }
 
