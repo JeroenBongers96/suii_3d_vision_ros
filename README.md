@@ -68,6 +68,7 @@ rosrun main
 
 * **Jeroen Bongers** - *Initial work* - [JeroenBongers96](https://github.com/JeroenBongers96)
 * **Mark Geraets** - *Initial work* - [markgrts](https://github.com/markgrts)
+In name of [RoboHub Eindhoven](https://robohub-eindhoven.nl/)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
