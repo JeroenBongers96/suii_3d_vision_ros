@@ -11,63 +11,66 @@ For this project Ubuntu 18.04 LTS is used. It is optional to use the nVidia CUDA
 
 ### Prerequisites
 
-The packege runs on C++, Python2.7, and Python 3.6 and you need all of those to let the system work. It makes use of the following packages:
+The package runs on C++, Python2.7, and Python 3.6 and you need all of those to let the system work. It makes use of the following packages:
 
 C++:
 * [Intel RealSense SDK2.0](https://github.com/IntelRealSense/librealsense)
 * [PCL](http://pointclouds.org/)
 * [ROS Melodic Morenia](http://wiki.ros.org/melodic)
+* [OpenCV](https://opencv.org/)
 
 Python2:
 * [ROS Melodic Morenia](http://wiki.ros.org/melodic)
 
 Python3:
 * [OpenCV](https://opencv.org/)
+* numpy
+* torch >= 1.1.0
+* tqdm
+* matplotlib
+* pycocotools
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+To install the suii_3d_vision_ros package in your catkin workspace, you will need to run the following lines:
 
 ```
-Give the example
+cd catkin_ws/src
+git clone https://github.com/JeroenBongers96/suii_3d_vision_ros.git
+catkin_make
 ```
 
-And repeat
+After installation of the package go to yolo->yolo.py and change the path of the config, data and weights files.
 
 ```
-until finished
+defaults_dict = {
+    "cfg": "/home/user/catkin_ws/src/yolo_config/full_yolo.cfg", # Config file path
+    "data": "/home/user/catkin_ws/src/yolo_config/full_yolo", # Data file path
+    "weights": "/home/user/catkin_ws/src/yolo_config/full_yolo.backup", # Weights file path
+    "conf_thres": 0.6, # Confidence threshold (accuracy)
+    "nms_thres": 0.5,  # Non-maximum supression threshold (compression, lower value = more compression)
+    "size": 416 # DO NOT CHANGE!!!
+}
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+If all installations are done, run the code with:
 
 ```
-Give an example
+roscore
+rosrun suii_3d_vision_ros yolo_main.py
+rosrun suii_3d_vision_ros yolo_server.py 
+rosrun main
 ```
 
 ## Authors
 
 * **Jeroen Bongers** - *Initial work* - [JeroenBongers96](https://github.com/JeroenBongers96)
-* **Mark Geraets** - *Initial work* - [markgrts](https://github.com/markgrts/++)
+* **Mark Geraets** - *Initial work* - [markgrts](https://github.com/markgrts)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-
