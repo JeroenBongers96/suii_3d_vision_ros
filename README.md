@@ -73,4 +73,4 @@ In name of [RoboHub Eindhoven](https://robohub-eindhoven.nl/)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the BSD 3-Clause License - see the [LICENSE.md](https://github.com/JeroenBongers96/suii_3d_vision_ros/blob/master/LICENSE) file for details
