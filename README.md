@@ -5,6 +5,11 @@ The system works as follows. Two images are made, one RGB image to detect what o
 YOLO outputs ROI' s that are used to cut out certain regions in the depth image. Out of these regions the object is segmented and the TF is determined.
 After the TF is determined it gets broadcasted with ROS. A more in depth explanation and diagrams of the software can be found in the [Docs](https://github.com/JeroenBongers96/suii_3d_vision_ros/tree/master/docs) folder.
 
+## Test Results
+
+The code has been tested and has been compared to the [2D_Camera_Accuracy_Test](https://github.com/RoboHubEindhoven-User/suii/wiki/Camera_accuracy_test-results) that was done by RoboHub.
+All results and conclusions can be found in the [wiki](https://github.com/JeroenBongers96/suii_3d_vision_ros/wiki).
+
 ## Getting Started
 
 For this project Ubuntu 18.04 LTS is used. It is optional to use the nVidia CUDA toolkit for faster YOLO inferencing.
