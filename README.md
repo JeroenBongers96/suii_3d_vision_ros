@@ -3,7 +3,8 @@
 This repository contains the 3D vision soluction for object detection for RoboCup@work competition that RoboHub Eindhoven participates in.
 The system works as follows. Two images are made, one RGB image to detect what objects are in front of the camera with YOLO and one depth image of the environment.
 YOLO outputs ROI' s that are used to cut out certain regions in the depth image. Out of these regions the object is segmented and the TF is determined.
-After the TF is determined it gets broadcasted with ROS. A more in depth explanation and diagrams of the software can be found in the [Docs](https://github.com/JeroenBongers96/suii_3d_vision_ros/tree/master/docs) folder.
+After the TF is determined it gets broadcasted with ROS. Diagrams of the software and the Design_Docs file can be found in the [Docs](https://github.com/JeroenBongers96/suii_3d_vision_ros/tree/master/docs) folder.
+The Design_Doc file contains a more in depth explanation of the software.
 
 ## Test Results
 
