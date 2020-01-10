@@ -38,6 +38,7 @@ Python3:
 
 ### Installing
 
+*NOTE:* To use this package you should have config, data and weights files for YOLO detection. How to create these files is found on the [RoboHub Eindhoven wiki](https://github.com/RoboHubEindhoven-User/suii/wiki).  
 To install the suii_3d_vision_ros package in your catkin workspace, you will need to run the following lines:
 
 ```
@@ -47,6 +48,7 @@ catkin_make
 ```
 
 After installation of the package go to [yolo.py](https://github.com/JeroenBongers96/suii_3d_vision_ros/blob/master/yolo/yolo.py) and change the path of the config, data and weights files.
+
 
 ```
 defaults_dict = {
